@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待办</title>
+    <link rel="stylesheet" href="../in.css">
+</head>
+<body>
+    <div class="nav"> 
+        <h6 class="zuo">便利签</h6>
+       <ul style="display: flex; list-style: none;">
+        <li class="na"><a href="biji.html" class="biji">笔记</a></li>
+        <li class="na"><a href="rili.html" class="todo">日历</a></li>
+       </ul>
+    </div>
+    <div class="header">
+        <h1>我的待办列表</h1>
+        <input type="text" placeholder="输入代办...">
+        <br>
+        <button class="an an1" disabled>添加</button>
+    </div>
+      <div class="kai">
+        <ul class="lizi">
+            <li><a href="">
+                <input type="checkbox" name="" id="">
+                搜集各种资料，编写质量控制ppt
+            
+            </a></li>
+            <li><a href="">
+                <input type="checkbox" name="" id="">
+                今天下午四点2楼会议室开会
+            </a></li>
+            <li><a href="">
+                <input type="checkbox" name="" id="">
+                MySql数据库信息完善并测试
+            </a></li>
+            <li><a href="">
+                <input type="checkbox" name="" id="">
+                这周末进行读书考试，上午九点出发
+            </a></li>
+        </ul>
+    </div>
+    <script>
+        // 为所有复选框添加点击事件监听
+        document.querySelectorAll('.kai input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // 获取父元素li
+                const listItem = this.closest('li');
+                // 获取文本内容（跳过复选框）
+                const textNodes = Array.from(listItem.childNodes).filter(node => node.nodeType === 3 || node.tagName !== 'INPUT');
+                
+                if (this.checked) {
+                    // 添加删除线样式
+                    textNodes.forEach(node => {
+                        if (node.nodeType === 3) {
+                            const span = document.createElement('span');
+                            span.style.textDecoration = 'line-through';
+                            span.style.color = '#999';
+                            span.textContent = node.textContent;
+                            node.parentNode.insertBefore(span, node);
+                            node.textContent = '';
+                        } else {
+                            node.style.textDecoration = 'line-through';
+                            node.style.color = '#999';
+                        }
+                    });
+                    // 将已完成的项目移到列表末尾
+                    const ul = listItem.parentNode;
+                    ul.appendChild(listItem);
+                } else {
+                    // 移除删除线样式
+                    textNodes.forEach(node => {
+                        if (node.nodeType === 3) {
+                            const spans = listItem.querySelectorAll('span');
+                            spans.forEach(span => {
+                                span.parentNode.insertBefore(document.createTextNode(span.textContent), span);
+                                span.remove();
+                            });
+                        } else {
+                            node.style.textDecoration = 'none';
+                            node.style.color = 'black';
+                        }
+                    });
+                    // 将未完成的项目移到列表开头
+                    const ul = listItem.parentNode;
+                    ul.insertBefore(listItem, ul.firstChild);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

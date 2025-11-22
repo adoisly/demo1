@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>笔记 - 便利签</title>
+    <link rel="stylesheet" href="../in.css">
+    <style>
+        /* 笔记相关样式 */
+        .note-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .add-note {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .add-note textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .add-note button {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-note button:hover {
+            background-color: #45a049;
+        }
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .note-box {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .note-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .note-content {
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+        .note-date {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav" style="position: relative;">
+            <h6 class="zuo">便利签</h6>
+            <ul style="display: flex; list-style: none;">
+                <li class="na"><a href="index.html" class="biji">首页</a></li>
+                <li class="na"><a href="biji.html" class="biji">笔记</a></li>
+                <li class="na"><a href="rili.html" class="todo">日历</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="note-container">
+        <div class="add-note">
+            <textarea id="noteInput" placeholder="写下你的笔记..."></textarea>
+            <button id="addNoteBtn">添加笔记</button>
+        </div>
+
+        <div class="notes-grid" id="notesContainer">
+            <!-- 笔记将在这里动态添加 -->
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const noteInput = document.getElementById('noteInput');
+        const addNoteBtn = document.getElementById('addNoteBtn');
+        const notesContainer = document.getElementById('notesContainer');
+
+        // 添加点击事件监听器
+        addNoteBtn.addEventListener('click', addNote);
+
+        // 回车键也可以添加笔记
+        noteInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && event.ctrlKey) {
+                addNote();
+            }
+        });
+
+        // 添加笔记函数
+        function addNote() {
+            const noteContent = noteInput.value.trim();
+            
+            // 检查输入内容是否为空
+            if (noteContent === '') {
+                alert('请输入笔记内容！');
+                return;
+            }
+
+            // 创建笔记元素
+            const noteBox = document.createElement('div');
+            noteBox.className = 'note-box';
+
+            // 创建笔记内容元素
+            const contentElement = document.createElement('div');
+            contentElement.className = 'note-content';
+            contentElement.textContent = noteContent;
+
+            // 创建日期元素
+            const dateElement = document.createElement('div');
+            dateElement.className = 'note-date';
+            const now = new Date();
+            dateElement.textContent = formatDate(now);
+
+            // 将内容和日期添加到笔记盒子中
+            noteBox.appendChild(contentElement);
+            noteBox.appendChild(dateElement);
+
+            // 将笔记盒子添加到容器中
+            notesContainer.appendChild(noteBox);
+
+            // 清空输入框
+            noteInput.value = '';
+        }
+
+        // 格式化日期函数
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+    </script>
+</body>
+</html>
